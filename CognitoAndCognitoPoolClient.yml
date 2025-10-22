@@ -1,55 +1,56 @@
-AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: 2010-09-09  
 Description: DynamoDB Table, S3 Bucket, and Cognito User Pool - Draft MedSwapApp
 
 Resources:
-  DynamoDBTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: MedicationTrack
-      AttributeDefinitions:
-        - AttributeName: Id
-          AttributeType: S
-      KeySchema:
-        - AttributeName: Id
-          KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
 
-  S3BucketStorage:
-    Type: AWS::S3::Bucket
+  DynamoDBTable:  
+    Type: AWS::DynamoDB::Table 
     Properties:
-      BucketName: basic-medication-project-bkt
+      TableName: MedicationTrack  
+      AttributeDefinitions:  
+        - AttributeName: Id  # Attribute name for the primary key
+          AttributeType: S  # Attribute type 'S' means string
+      KeySchema:  
+        - AttributeName: Id  
+          KeyType: HASH  # HASH key acts as the partition key
+      ProvisionedThroughput:  # Capacity settings for read and write operations
+        ReadCapacityUnits: 1  
+        WriteCapacityUnits: 1  
 
-  CognitoUserPool:
-    Type: AWS::Cognito::UserPool
+  S3BucketStorage:  
+    Type: AWS::S3::Bucket  
     Properties:
-      UserPoolName: MedSwapUserPool
-      AutoVerifiedAttributes:
-        - email
-      UsernameAttributes:
-        - email
+      BucketName: basic-medication-project-bkt  # Explicit name of the S3 bucket (must be globally unique)
 
-  CognitoUserPoolClient:
-    Type: AWS::Cognito::UserPoolClient
+  CognitoUserPool:  
+    Type: AWS::Cognito::UserPool  
     Properties:
-      ClientName: MedSwapAppClient
-      UserPoolId: !Ref CognitoUserPool
-      GenerateSecret: false
+      UserPoolName: MedSwapUserPool 
+      AutoVerifiedAttributes:  # Attributes automatically verified by Cognito
+        - email  
+      UsernameAttributes:  
+        - email  
 
-Outputs:
+  CognitoUserPoolClient:  
+    Type: AWS::Cognito::UserPoolClient  
+    Properties:
+      ClientName: MedSwapAppClient  
+      UserPoolId: !Ref CognitoUserPool  # References the user pool created above
+      GenerateSecret: false  # Indicates if the client should have a secret key (false for public apps)
+
+Outputs:  # Defines values returned after stack creation
   DynamoDBTableName:
-    Description: "Name of the DynamoDB table"
-    Value: !Ref DynamoDBTable
+    Description: "Name of the DynamoDB table"  
+    Value: !Ref DynamoDBTable  # Returns the name of the DynamoDB table
 
   S3BucketName:
-    Description: "Name of the S3 bucket"
-    Value: !Ref S3BucketStorage
+    Description: "Name of the S3 bucket"  
+    Value: !Ref S3BucketStorage  # Returns the S3 bucket name
 
   CognitoUserPoolId:
-    Description: "ID of the Cognito User Pool"
-    Value: !Ref CognitoUserPool
+    Description: "ID of the Cognito User Pool"  
+    Value: !Ref CognitoUserPool  # Returns the ID of the Cognito User Pool
 
   CognitoUserPoolClientId:
     Description: "ID of the Cognito User Pool Client"
-    Value: !Ref CognitoUserPoolClient
+    Value: !Ref CognitoUserPoolClient  # Returns the ID of the User Pool Client
