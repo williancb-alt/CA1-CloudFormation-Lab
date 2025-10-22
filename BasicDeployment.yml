@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: DynamoDB Table and s3 Bucket - Draft MedSwapApp
+
+Resources:
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: MedicationSwap
+      AttributeDefinitions:
+        - AttributeName: Id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
+  S3BucketStorage:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: basic-medication-project-bucket
