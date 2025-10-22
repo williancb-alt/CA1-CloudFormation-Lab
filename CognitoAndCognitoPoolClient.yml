@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: DynamoDB Table, S3 Bucket, and Cognito User Pool - Draft MedSwapApp
+
+Resources:
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: MedicationTrack
+      AttributeDefinitions:
+        - AttributeName: Id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
+  S3BucketStorage:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: basic-medication-project-bkt
+
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: MedSwapUserPool
+      AutoVerifiedAttributes:
+        - email
+      UsernameAttributes:
+        - email
+
+  CognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: MedSwapAppClient
+      UserPoolId: !Ref CognitoUserPool
+      GenerateSecret: false
+
+Outputs:
+  DynamoDBTableName:
+    Description: "Name of the DynamoDB table"
+    Value: !Ref DynamoDBTable
+
+  S3BucketName:
+    Description: "Name of the S3 bucket"
+    Value: !Ref S3BucketStorage
+
+  CognitoUserPoolId:
+    Description: "ID of the Cognito User Pool"
+    Value: !Ref CognitoUserPool
+
+  CognitoUserPoolClientId:
+    Description: "ID of the Cognito User Pool Client"
+    Value: !Ref CognitoUserPoolClient
